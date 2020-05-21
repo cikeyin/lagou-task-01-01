@@ -121,16 +121,17 @@ function foo() {
 答：（一）JavaScript是单线程的脚本语言，所谓“单线程”就是指一次只能执行一个任务，如果有多个任务就必须要排队，只有前面的任务完成了，才能执行后面的任务。这种模块带来的坏处是只要有一个任务耗时很长后面的任务就必须要排队等着，造成浏览器假死。为了解决这个问题，JavaScript将任务的执行模式分成两种：同步和异步。
 	   同步模式就是上面描述的模式，后一个任务需要等待前一个任务结束后才能执行，程序的执行顺序和任务的排列顺序是一致的、同步的；异步模式则不同，每一个任务有一个或者多个回调函数（callback），前一个任务结束后，不是执行后一个任务，而是执行回调函数，同时，后面的任务也不等前一个任务结束就执行，所以程序的执行顺序和任务的排列顺序是不一致的、异步的。可以通过回调函数、事件监听、发布/订阅、Promise来实现异步编程。
 
-		（二）异步执行的运行机制如下。
+	（二）异步执行的运行机制如下。
 		（1） 所有同步任务都在主线程中执行，形成一个执行栈。
 		（2） 主线程以外，还有一个“任务队列”，只要异步任务有了运行结果，就在“任务队列”中排队添加一个事件。
 		（3） 程序中会优先执行“执行栈”中的同步任务，执行完毕后系统读取“任务队列”，将其中排队的事件压入“执行栈”中执行。
 		（4）主线程不断从“任务队列”中读取事件，这个运行机制成为“事件循环（Event Loop）”，如下图。
 ![事件运行机制](https://img-blog.csdnimg.cn/20200521221705585.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzc2MjE1MA==,size_16,color_FFFFFF,t_70#pic_center)
-（三）任务分为宏任务（macrotask）和微任务（microtask）。
 
- - 宏任务包括整体代码script、setTimeout、setInterval、I/O、UI render。
- - 微任务主要是：Promise、process.nextTick、MutationObserver。
+   （三）任务分为宏任务（macrotask）和微任务（microtask）。
+
+    - 宏任务包括整体代码script、setTimeout、setInterval、I/O、UI render。
+    - 微任务主要是：Promise、process.nextTick、MutationObserver。
       在挂起任务时，JS 引擎会将所有任务按照类别分到这两个队列中。在读取任务时，首先在 macrotask 的队列中取出第一个任务，执行完毕后取出 microtask 队列中的所有任务顺序执行；之后再取 macrotask 任务，周而复始，直至两个队列的任务都取完。
 
 
